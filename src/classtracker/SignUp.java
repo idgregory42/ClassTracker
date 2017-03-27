@@ -157,6 +157,7 @@ public class SignUp extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.dispose();
 
     }//GEN-LAST:event_create_btnActionPerformed
 

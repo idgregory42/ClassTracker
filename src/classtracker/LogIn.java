@@ -152,7 +152,7 @@ public class LogIn extends javax.swing.JFrame {
             no_error.setVisible(true);
             return;
         }
-        
+        this.dispose();
     }//GEN-LAST:event_sign_btnActionPerformed
 
     private void create_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_create_labelMouseClicked

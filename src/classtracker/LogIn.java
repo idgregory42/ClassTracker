@@ -5,6 +5,11 @@
  */
 package classtracker;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Ian
@@ -14,8 +19,20 @@ public class LogIn extends javax.swing.JFrame {
     /**
      * Creates new form SignUp
      */
-    public LogIn() {
+    private UserInfo user_info;
+    private List<String> pass;
+    private List<String> names;
+    private String password, user;
+    
+    public LogIn() throws SQLException, ClassNotFoundException {
         initComponents();
+        null_error.setVisible(false);
+        no_error.setVisible(false);
+        user_info = new UserInfo();
+        names = user_info.getUsernames();
+        pass = user_info.getPasswords();
+        user = "";
+        password = "";
     }
 
     /**
@@ -32,17 +49,37 @@ public class LogIn extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         pass_text = new javax.swing.JPasswordField();
         sign_btn = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        create_label = new javax.swing.JLabel();
+        null_error = new javax.swing.JLabel();
+        no_error = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Class Tracker");
 
         jLabel1.setText("Username");
 
         jLabel2.setText("Password");
 
         sign_btn.setText("Sign in");
+        sign_btn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sign_btnActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Create Account");
+        create_label.setForeground(new java.awt.Color(0, 0, 255));
+        create_label.setText("Create Account ");
+        create_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                create_labelMouseClicked(evt);
+            }
+        });
+
+        null_error.setForeground(new java.awt.Color(255, 0, 0));
+        null_error.setText("Please Enter all fields");
+
+        no_error.setForeground(new java.awt.Color(255, 0, 0));
+        no_error.setText("The Username or Password was not correct!");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -50,18 +87,27 @@ public class LogIn extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sign_btn)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel1)
-                        .addComponent(user_text, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addComponent(pass_text)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(161, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(sign_btn)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel1)
+                                .addComponent(user_text, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addComponent(pass_text)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(create_label)
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(null_error)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(no_error)
+                        .addGap(0, 55, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,20 +116,72 @@ public class LogIn extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(user_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(null_error)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pass_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(sign_btn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(no_error)
+                .addGap(23, 23, 23)
+                .addComponent(create_label)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void sign_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sign_btnActionPerformed
+        // TODO add your handling code here:
+        if(null_error.isVisible()) null_error.setVisible(false);
+        else if(no_error.isVisible()) no_error.setVisible(false);
+        
+        user = user_text.getText();
+        password = pass_text.getText();
+        if(isEmpty(user) || isEmpty(password)){
+            null_error.setVisible(true);
+            return;
+        }
+        else if(!isCorrect()){
+            no_error.setVisible(true);
+            return;
+        }
+        
+    }//GEN-LAST:event_sign_btnActionPerformed
+
+    private void create_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_create_labelMouseClicked
+        // TODO add your handling code here:
+        this.setVisible(false);
+        try {
+            user_info.closeCon();
+        } catch (SQLException ex) {
+            Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            new SignUp().setVisible(true);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_create_labelMouseClicked
+
+    private boolean isCorrect(){
+        int index = userIndex();
+        if(index == -1) return false;
+        return(password.compareTo(pass.get(index)) == 0);
+    }
+    private int userIndex(){
+        return names.indexOf(user);
+    }
+    
+    private boolean isEmpty(String s){
+        return (s.compareTo("") == 0);
+    }
     /**
      * @param args the command line arguments
      */
@@ -115,17 +213,21 @@ public class LogIn extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
                 new LogIn().setVisible(true);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(LogIn.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel create_label;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel no_error;
+    private javax.swing.JLabel null_error;
     private javax.swing.JPasswordField pass_text;
     private javax.swing.JButton sign_btn;
     private javax.swing.JTextField user_text;
